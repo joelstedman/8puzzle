@@ -12,13 +12,13 @@ public class Board {
     private int n;
     private int[][] boardArr;
     private int[][] twinBoardArr;
-    private int hamming;
+
 
     public Board(int[][] block) {
         this.boardArr = block;
         this.n = block.length;
         this.twinBoardArr = new int[this.n][this.n];
-        this.hamming = this.hamming();
+
 
     }
 
@@ -38,7 +38,7 @@ public class Board {
                 if (i == n - 1 && j == n - 1) {
                     goalN = 0;
                 }
-                if (startValue != goalN) {
+                if (startValue != goalN && startValue != 0) {
                     hammingCount++;
                 }
                 goalN++;
@@ -49,8 +49,25 @@ public class Board {
 
     public int manhattan() {// sum of Manhattan distances between blocks and goal
         //Recall that the blank square is not considered a block
-        return 10;
         //https://codereview.stackexchange.com/questions/86597/optimizing-manhattan-distance-method-for-n-by-n-puzzles
+        int goalN = 1;
+        int hammingCount = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int startValue = this.boardArr[i][j];
+                this.twinBoardArr[i][j] = startValue;
+                // System.out.println("start:" + startValue + "*");
+                // System.out.println("n:" + goalN + "*");
+                if (i == n - 1 && j == n - 1) {
+                    goalN = 0;
+                }
+                if (startValue != goalN) {
+                    hammingCount++;
+                }
+                goalN++;
+            }
+        }
+        return hammingCount;
     }
 
 

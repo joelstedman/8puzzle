@@ -26,7 +26,7 @@ public class Solver {
             this.board = board;
             this.prev = prev;
             this.moves = moves;
-            this.hamming = board.hamming() + moves;
+            this.hamming = board.manhattan() + moves;
         }
     }
 
