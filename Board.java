@@ -4,10 +4,11 @@
  *  Description:
  **************************************************************************** */
 
-import edu.princeton.cs.algs4.StdOut;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-
-class Board {
+public class Board {
     private int n;
     private int[][] boardArr;
     private int[][] twinBoardArr;
@@ -20,7 +21,6 @@ class Board {
         this.hamming = this.hamming();
 
     }
-
 
     public int dimension() {
         return this.n;
@@ -56,14 +56,14 @@ class Board {
 
     public boolean isGoal() {//is this board the goal board?
         int goalN = 1;
+        int[][] goal = new int[this.n][this.n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 int startValue = this.boardArr[i][j];
-                // System.out.println("start:" + startValue + "*");
-                // System.out.println("n:" + goalN + "*");
                 if (i == n - 1 && j == n - 1) {
                     goalN = 0;
                 }
+                goal[i][j] = goalN;
                 if (startValue != goalN) {
                     return false;
                 }
@@ -93,7 +93,6 @@ class Board {
                         i1 = i;
                         j1 = j;
                         val1 = val;
-
                         found1 = true;
                     }
                     else if (!found2) {
@@ -109,7 +108,6 @@ class Board {
         }
         this.twinBoardArr[i1][j1] = val2;
         this.twinBoardArr[i2][j2] = val1;
-
         Board board = new Board(this.twinBoardArr);
         return board;
     }
@@ -128,11 +126,95 @@ class Board {
         return true;
     }
 
-    //
-    // public Iterable<Board> neighbors() {//check all neighbors against the previous
-    //
-    // }   // all neighboring boards
-    //
+    private int[][] clone(int[][] original) {
+        int[][] arr = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                arr[i][j] = original[i][j];
+            }
+        }
+        return arr;
+    }
+
+    public Iterable<Board> neighbors() {
+
+
+        //find the coordinates of the zero
+        int targetI = 0;
+        int targetJ = 0;
+        for (int i = 0; i < this.n; i++) {
+            for (int j = 0; j < this.n; j++) {
+                if (this.boardArr[i][j] == 0) {
+                    targetI = i;
+                    targetJ = j;
+                    //System.out.println("targetX: " + i + "targetY: " + j);
+                }
+            }
+        }
+
+        //check to make sure 4 possibilities are out-of-bounds and add Board to list if OK
+        List<Board> neighbors = new ArrayList<Board>();
+
+        int val;
+        int x = targetI;
+        int y = targetJ;
+
+        int[][] neighbor;
+        Board neighborBoard;
+
+        if (x + 1 < n) {
+            neighbor = clone(this.boardArr);
+            val = neighbor[x + 1][y];
+            neighbor[targetI][targetJ] = val;
+            neighbor[x + 1][y] = 0;
+            neighborBoard = new Board(neighbor);
+            neighbors.add(neighborBoard);
+        }
+        if (y + 1 < n) {
+            neighbor = clone(this.boardArr);
+            val = neighbor[x][y + 1];
+            neighbor[targetI][targetJ] = val;
+            neighbor[x][y + 1] = 0;
+            neighborBoard = new Board(neighbor);
+            neighbors.add(neighborBoard);
+        }
+        if (x - 1 > -1) {
+            neighbor = clone(this.boardArr);
+            //swap out zero with x,y
+            val = neighbor[x - 1][y];
+            neighbor[targetI][targetJ] = val;
+            neighbor[x - 1][y] = 0;
+            neighborBoard = new Board(neighbor);
+            neighbors.add(neighborBoard);
+        }
+        if (y - 1 > -1) {
+            neighbor = clone(this.boardArr);
+            //swap out zero with x,y
+            val = neighbor[x][y - 1];
+            neighbor[targetI][targetJ] = val;
+            neighbor[x][y - 1] = 0;
+            neighborBoard = new Board(neighbor);
+            neighbors.add(neighborBoard);
+        }
+
+
+        Iterable<Board> iterable = new IterableNeighbors(neighbors);
+        return iterable;
+    }
+
+    private class IterableNeighbors implements Iterable<Board> {
+        List<Board> neighborList;
+
+        public IterableNeighbors(List<Board> neighborList) {
+            this.neighborList = neighborList;
+        }
+
+        public Iterator<Board> iterator() {
+            return neighborList.iterator();
+        }
+
+    }
+
     public String toString() {// string representation of this board (in the output format specified below)
         StringBuilder s = new StringBuilder();
         s.append(n + "\n");
@@ -147,27 +229,62 @@ class Board {
 
 
     public static void main(String[] args) {
-
-
-        //create initial board from file
-
-        int n = 3;
-        int m = 0;
-        int[][] blocks = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                m++;
-                blocks[i][j] = m;
-            }
-        }
+        // //create board with zero
+        // int x = 1;
+        // int y = 1;
+        // int n = 3;
+        // int m = 1;
+        // int[][] blocks = new int[n][n];
+        // for (int i = 0; i < n; i++) {
+        //     for (int j = 0; j < n; j++) {
+        //         m++;
+        //         if (i == x && j == y) {
+        //             blocks[i][j] = 0;
+        //         }
+        //         else {
+        //             blocks[i][j] = m;
+        //         }
         //
-        Board initial = new Board(blocks);
-        Board initialCopy = new Board(blocks);
-        Board twin = initial.twin();
-        StdOut.println(initial);
-        StdOut.println(twin);
-        StdOut.println(initial.equals(initialCopy));
-        StdOut.println(initial.equals(twin));
+        //     }
+        // }
+        // Board startBoard = new Board(blocks);
+        // //System.out.println(startBoard.toString());
+        //
+        //
+        // Iterable<Board> neighbors = startBoard.neighbors();
+        // Iterator<Board> it = neighbors.iterator();
+        // while (it.hasNext()) {
+        //     Board board = it.next();
+        //     System.out.println(board.toString());
+        // }
+
+
+        // //create board with all zeros
+        // int n = 3;
+        // int m = 0;
+        // int[][] blocks = new int[n][n];
+        // for (int i = 0; i < n; i++) {
+        //     for (int j = 0; j < n; j++) {
+        //         m++;
+        //         blocks[i][j] = m;
+        //     }
+        // }
+        // //
+        // Board board = new Board(blocks);
+        // Iterable<Board> iterable = board.neighbors();
+        // Iterator<Board> it = iterable.iterator();
+        // StdOut.println(it.hasNext());
+        // Board iteratorBoard = it.next();
+        // StdOut.println(iteratorBoard.hamming());
+
+        // Board initialCopy = new Board(blocks);
+        // Board twin = initial.twin();
+        // StdOut.println(initial);
+        // StdOut.println(twin);
+
+        // StdOut.println(initial.equals(initialCopy));
+        // StdOut.println(initial.equals(twin));
+
         // //solve the puzzle
         // Solver solver = new Solver(initial);
         //
