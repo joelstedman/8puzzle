@@ -12,6 +12,7 @@ public class Board {
     private int n;
     private int[][] boardArr;
     private int[][] twinBoardArr;
+    private int manhattanCount;
 
 
     public Board(int[][] block) {
@@ -49,25 +50,29 @@ public class Board {
 
     public int manhattan() {// sum of Manhattan distances between blocks and goal
         //Recall that the blank square is not considered a block
-        //https://codereview.stackexchange.com/questions/86597/optimizing-manhattan-distance-method-for-n-by-n-puzzles
+
         int goalN = 1;
-        int hammingCount = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                int startValue = this.boardArr[i][j];
-                this.twinBoardArr[i][j] = startValue;
-                // System.out.println("start:" + startValue + "*");
-                // System.out.println("n:" + goalN + "*");
-                if (i == n - 1 && j == n - 1) {
-                    goalN = 0;
+        int x;
+        int y;
+        manhattanCount = 0;
+        int distance;
+        for (int i = 0; i < this.n; i++) {
+            for (int j = 0; j < this.n; j++) {
+                //calculate x & y
+                //if not 0
+                if (this.boardArr[i][j] != 0) {
+                    x = (this.boardArr[i][j] - 1) / this.n;
+                    y = (this.boardArr[i][j] - 1) % this.n;
+                    distance = Math.abs(x - i) + Math.abs(y - j);
+                    manhattanCount += distance;
+                    // System.out.println(
+                    //         "goal: " + goalN + " number: " + this.boardArr[i][j] + " x: " + x
+                    //                 + " y: " + y);
+                    goalN++;
                 }
-                if (startValue != goalN) {
-                    hammingCount++;
-                }
-                goalN++;
             }
         }
-        return hammingCount;
+        return manhattanCount;
     }
 
 

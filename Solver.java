@@ -15,7 +15,7 @@ public class Solver {
         Board board;
         SearchNode prev;
         int moves;
-        int hamming;
+        int manhattan;
         boolean solvable;
 
         public SearchNode() {
@@ -26,7 +26,7 @@ public class Solver {
             this.board = board;
             this.prev = prev;
             this.moves = moves;
-            this.hamming = board.manhattan() + moves;
+            this.manhattan = board.manhattan() + moves;
         }
     }
 
@@ -81,7 +81,7 @@ public class Solver {
         }
 
         public int compare(SearchNode node, SearchNode anotherNode) {
-            return node.hamming - anotherNode.hamming;
+            return node.manhattan - anotherNode.manhattan;
         }
     }
 
@@ -128,13 +128,15 @@ public class Solver {
         }
 
         Board initial = new Board(blocks);
-
+        // System.out.println(initial.manhattan());
+        // System.out.println(initial.toString());
         //solve the puzzle
         Solver solver = new Solver(initial);
         Iterable<Board> boards = solver.solution();
         Iterator<Board> it = boards.iterator();
         while (it.hasNext()) {
             Board board = it.next();
+            System.out.println("manhattan: " + board.manhattan());
             System.out.println(board.toString());
         }
 
