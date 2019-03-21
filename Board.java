@@ -18,7 +18,7 @@ public class Board {
     public Board(int[][] block) {
         this.boardArr = block;
         this.n = block.length;
-        this.twinBoardArr = this.clone(this.boardArr);
+        this.twinBoardArr = new int[this.n][this.n];
 
 
     }

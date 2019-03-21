@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Solver {
-    private int moves = 0;
+    private int moves = -1;
     private boolean solvable;
     private List<Board> finalList;
 
@@ -51,8 +51,8 @@ public class Solver {
             //pop off q
             popNode = q.delMin();
             board = popNode.board;
-            list.add(board);
             goalBoard = board.isGoal();
+            int moves = 3;
 
             //get the neighbors
             neighbors = board.neighbors();
@@ -62,11 +62,14 @@ public class Solver {
                 q.insert(new SearchNode(board, prev, this.moves));
             }
             prev = popNode;
-
+            list.add(board);
 
             this.moves++;
 
 
+            if (this.moves == times) {
+                break;
+            }
         }
         this.finalList = list;
     }
@@ -125,16 +128,15 @@ public class Solver {
         }
 
         Board initial = new Board(blocks);
-        // Board twin = initial.twin();
+        // System.out.println(initial.manhattan());
         // System.out.println(initial.toString());
-        // System.out.println(twin.toString());
         //solve the puzzle
         Solver solver = new Solver(initial);
         Iterable<Board> boards = solver.solution();
         Iterator<Board> it = boards.iterator();
         while (it.hasNext()) {
             Board board = it.next();
-            //System.out.println("manhattan: " + board.manhattan());
+            System.out.println("manhattan: " + board.manhattan());
             System.out.println(board.toString());
         }
 
