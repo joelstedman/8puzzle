@@ -136,7 +136,7 @@ public class Solver {
         Iterator<Board> it = boards.iterator();
         while (it.hasNext()) {
             Board board = it.next();
-            System.out.println("manhattan: " + board.manhattan());
+            //System.out.println("manhattan: " + board.manhattan());
             System.out.println(board.toString());
         }
 
