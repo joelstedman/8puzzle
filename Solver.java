@@ -34,7 +34,6 @@ public class Solver {
         MinPQ<SearchNode> q = new MinPQ<SearchNode>(new compareNodes());
         //insert initial board
         q.insert(new SearchNode(initial, null, 0));
-
         //create temps
         Board board;
         SearchNode prev = null;
@@ -42,18 +41,14 @@ public class Solver {
         Iterator<Board> it;
         SearchNode popNode = new SearchNode();
         List<Board> list = new ArrayList<Board>();
-
         int times = 20;
         boolean goalBoard = false;
-
-
         while (!goalBoard) {
             //pop off q
             popNode = q.delMin();
             board = popNode.board;
             goalBoard = board.isGoal();
             int moves = 3;
-
             //get the neighbors
             neighbors = board.neighbors();
             it = neighbors.iterator();
@@ -63,17 +58,13 @@ public class Solver {
             }
             prev = popNode;
             list.add(board);
-
             this.moves++;
-
-
             if (this.moves == times) {
                 break;
             }
         }
         this.finalList = list;
     }
-
 
     private class compareNodes implements Comparator<SearchNode> {
         public compareNodes() {

@@ -14,13 +14,10 @@ public class Board {
     private int[][] twinBoardArr;
     private int manhattanCount;
 
-
     public Board(int[][] block) {
         this.boardArr = block;
         this.n = block.length;
         this.twinBoardArr = new int[this.n][this.n];
-
-
     }
 
     public int dimension() {
@@ -34,8 +31,6 @@ public class Board {
             for (int j = 0; j < n; j++) {
                 int startValue = this.boardArr[i][j];
                 this.twinBoardArr[i][j] = startValue;
-                // System.out.println("start:" + startValue + "*");
-                // System.out.println("n:" + goalN + "*");
                 if (i == n - 1 && j == n - 1) {
                     goalN = 0;
                 }
@@ -50,7 +45,6 @@ public class Board {
 
     public int manhattan() {// sum of Manhattan distances between blocks and goal
         //Recall that the blank square is not considered a block
-
         int goalN = 1;
         int x;
         int y;
@@ -58,23 +52,17 @@ public class Board {
         int distance;
         for (int i = 0; i < this.n; i++) {
             for (int j = 0; j < this.n; j++) {
-                //calculate x & y
-                //if not 0
                 if (this.boardArr[i][j] != 0) {
                     x = (this.boardArr[i][j] - 1) / this.n;
                     y = (this.boardArr[i][j] - 1) % this.n;
                     distance = Math.abs(x - i) + Math.abs(y - j);
                     manhattanCount += distance;
-                    // System.out.println(
-                    //         "goal: " + goalN + " number: " + this.boardArr[i][j] + " x: " + x
-                    //                 + " y: " + y);
                     goalN++;
                 }
             }
         }
         return manhattanCount;
     }
-
 
     public boolean isGoal() {//is this board the goal board?
         int goalN = 1;
@@ -159,8 +147,6 @@ public class Board {
     }
 
     public Iterable<Board> neighbors() {
-
-
         //find the coordinates of the zero
         int targetI = 0;
         int targetJ = 0;
@@ -173,17 +159,13 @@ public class Board {
                 }
             }
         }
-
         //check to make sure 4 possibilities are out-of-bounds and add Board to list if OK
         List<Board> neighbors = new ArrayList<Board>();
-
         int val;
         int x = targetI;
         int y = targetJ;
-
         int[][] neighbor;
         Board neighborBoard;
-
         if (x + 1 < n) {
             neighbor = clone(this.boardArr);
             val = neighbor[x + 1][y];
